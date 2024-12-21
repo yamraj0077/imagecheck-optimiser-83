@@ -3,11 +3,12 @@ import { Helmet } from "react-helmet";
 import { PDFDocument } from 'pdf-lib';
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Upload, FileUp } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Link } from "react-router-dom";
+import { FileList } from "@/components/pdf-tools/FileList";
+import { UploadZone } from "@/components/pdf-tools/UploadZone";
 
 const PDFMerge = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -125,21 +126,27 @@ const PDFMerge = () => {
         </script>
       </Helmet>
       <div className="container py-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <Link to="/" className="hover:text-primary">Home</Link>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <Link to="/pdf-tools" className="hover:text-primary">PDF Tools</Link>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Merge PDF</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <div className="mb-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/" className="hover:text-primary">Home</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/pdf-tools" className="hover:text-primary">PDF Tools</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Merge PDF</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
 
         <PageHeader
           title="Merge PDF Files"
@@ -149,68 +156,24 @@ const PDFMerge = () => {
 
         <div className="mt-8 max-w-2xl mx-auto">
           <div className="space-y-6">
-            <div className="flex flex-col items-center justify-center w-full">
-              <label
-                htmlFor="dropzone-file"
-                className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-background hover:bg-accent/50 border-border"
-              >
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <Upload className="w-10 h-10 mb-3 text-muted-foreground" />
-                  <p className="mb-2 text-sm text-muted-foreground">
-                    <span className="font-semibold">Click to upload</span> or drag and drop
-                  </p>
-                  <p className="text-xs text-muted-foreground">PDF files only</p>
-                </div>
-                <Input
-                  id="dropzone-file"
-                  type="file"
-                  className="hidden"
-                  accept=".pdf"
-                  multiple
-                  onChange={handleFileChange}
-                />
-              </label>
-            </div>
+            <UploadZone onFileChange={handleFileChange} />
+            <FileList files={files} onRemoveFile={removeFile} />
 
             {files.length > 0 && (
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Selected Files</h3>
-                <div className="space-y-2">
-                  {files.map((file, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-3 bg-accent/50 rounded-lg"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <FileUp className="w-5 h-5" />
-                        <span className="text-sm font-medium">{file.name}</span>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeFile(index)}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-
-                <Button
-                  className="w-full"
-                  onClick={mergePDFs}
-                  disabled={isLoading || files.length < 2}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Merging PDFs...
-                    </>
-                  ) : (
-                    "Merge PDFs"
-                  )}
-                </Button>
-              </div>
+              <Button
+                className="w-full"
+                onClick={mergePDFs}
+                disabled={isLoading || files.length < 2}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Merging PDFs...
+                  </>
+                ) : (
+                  "Merge PDFs"
+                )}
+              </Button>
             )}
           </div>
         </div>

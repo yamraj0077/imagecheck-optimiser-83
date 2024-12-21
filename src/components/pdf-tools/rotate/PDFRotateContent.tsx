@@ -47,15 +47,25 @@ export const PDFRotateContent = () => {
       const fileArrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(fileArrayBuffer);
       
-      // Convert degrees to Rotation enum value
-      const rotationValue = ((degrees % 360 + 360) % 360) as Rotation;
+      // Get the appropriate Rotation enum value
+      const getRotationEnum = (degrees: number): Rotation => {
+        // Normalize degrees to 0, 90, 180, or 270
+        const normalizedDegrees = ((degrees % 360 + 360) % 360);
+        switch (normalizedDegrees) {
+          case 0: return Rotation.Degrees0;
+          case 90: return Rotation.Degrees90;
+          case 180: return Rotation.Degrees180;
+          case 270: return Rotation.Degrees270;
+          default: return Rotation.Degrees0;
+        }
+      };
       
       // Rotate all pages
       const pages = pdfDoc.getPages();
       pages.forEach(page => {
         const currentRotation = page.getRotation().angle;
-        const newRotation = ((currentRotation + degrees) % 360 + 360) % 360;
-        page.setRotation(newRotation as Rotation);
+        const newRotationDegrees = (currentRotation + degrees + 360) % 360;
+        page.setRotation(getRotationEnum(newRotationDegrees));
       });
 
       const pdfBytes = await pdfDoc.save();

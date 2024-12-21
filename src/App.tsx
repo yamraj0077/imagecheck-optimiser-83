@@ -15,6 +15,8 @@ import QRTools from "./pages/QRTools";
 import Utilities from "./pages/Utilities";
 import PDFMerge from "./pages/pdf-tools/PDFMerge";
 import PDFExtract from "./pages/pdf-tools/PDFExtract";
+import PDFRotate from "./pages/pdf-tools/PDFRotate";
+import PDFSplit from "./pages/pdf-tools/PDFSplit";
 import ImageCompress from "./pages/image-tools/ImageCompress";
 
 const queryClient = new QueryClient();
@@ -37,6 +39,8 @@ const App = () => (
               <Route path="/utilities" element={<Utilities />} />
               <Route path="/pdf-tools/merge" element={<PDFMerge />} />
               <Route path="/pdf-tools/extract" element={<PDFExtract />} />
+              <Route path="/pdf-tools/rotate" element={<PDFRotate />} />
+              <Route path="/pdf-tools/split" element={<PDFSplit />} />
               <Route path="/image-tools/compress" element={<ImageCompress />} />
             </Routes>
           </main>

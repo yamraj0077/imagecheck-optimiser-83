@@ -7,6 +7,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import Index from "./pages/Index";
 import PDFTools from "./pages/PDFTools";
+import PDFMerge from "./pages/pdf-tools/PDFMerge";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/pdf-tools" element={<PDFTools />} />
+              <Route path="/pdf-tools/merge" element={<PDFMerge />} />
             </Routes>
           </main>
           <Footer />

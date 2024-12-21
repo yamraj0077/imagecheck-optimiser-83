@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { PageHeader } from "@/components/PageHeader";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { PDFExtractContent } from "@/components/pdf-tools/extract/PDFExtractContent";
+import { PDFExtractManual } from "@/components/pdf-tools/extract/PDFExtractManual";
+import { PDFExtractFAQ } from "@/components/pdf-tools/extract/PDFExtractFAQ";
 
 const PDFExtract = () => {
   return (
@@ -83,6 +85,8 @@ const PDFExtract = () => {
         />
 
         <PDFExtractContent />
+        <PDFExtractManual />
+        <PDFExtractFAQ />
       </div>
     </>
   );

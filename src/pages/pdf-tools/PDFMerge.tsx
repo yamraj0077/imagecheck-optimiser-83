@@ -9,6 +9,42 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Link } from "react-router-dom";
 import { FileList } from "@/components/pdf-tools/FileList";
 import { UploadZone } from "@/components/pdf-tools/UploadZone";
+import { ToolManual } from "@/components/tools/ToolManual";
+import { ToolFAQ } from "@/components/tools/ToolFAQ";
+
+const manualSections = [
+  {
+    title: "How to Merge PDF Files",
+    content: "1. Click the upload area or drag and drop your PDF files\n2. Arrange the files in your desired order\n3. Click 'Merge PDFs' to combine them\n4. Download your merged PDF file"
+  },
+  {
+    title: "Supported File Types",
+    content: "This tool supports PDF files only. Make sure all your files are in PDF format before uploading."
+  },
+  {
+    title: "File Size Limits",
+    content: "Each file should be under 50MB. The total size of all files combined should not exceed 100MB."
+  }
+];
+
+const faqs = [
+  {
+    question: "Is my data secure?",
+    answer: "Yes, all processing is done in your browser. Your files are never uploaded to our servers."
+  },
+  {
+    question: "What's the maximum number of PDFs I can merge?",
+    answer: "You can merge up to 20 PDF files at once."
+  },
+  {
+    question: "Will I lose quality when merging PDFs?",
+    answer: "No, our tool maintains the original quality of your PDF files during the merge process."
+  },
+  {
+    question: "Can I rearrange the order of PDFs?",
+    answer: "Yes, you can drag and drop files in the list to change their order before merging."
+  }
+];
 
 const PDFMerge = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -97,11 +133,20 @@ const PDFMerge = () => {
   return (
     <>
       <Helmet>
-        <title>Merge PDF Files Online - Free PDF Merger Tool</title>
-        <meta name="description" content="Combine multiple PDF files into one document with our free online PDF merger tool. Easy to use, no registration required, and secure PDF processing." />
-        <meta name="keywords" content="merge pdf, combine pdf, join pdf, pdf merger, free pdf merger, online pdf merger, pdf combiner" />
-        <meta property="og:title" content="Merge PDF Files Online - Free PDF Merger Tool" />
-        <meta property="og:description" content="Combine multiple PDF files into one document with our free online PDF merger tool. Easy to use, no registration required." />
+        <title>Free Online PDF Merger - Combine PDF Files | PDF Tools</title>
+        <meta 
+          name="description" 
+          content="Merge multiple PDF files into one document easily with our free online PDF merger tool. No installation required, secure processing in your browser." 
+        />
+        <meta 
+          name="keywords" 
+          content="merge pdf, combine pdf, join pdf, pdf merger, free pdf merger, online pdf merger, pdf combiner" 
+        />
+        <meta property="og:title" content="Free Online PDF Merger - Combine PDF Files | PDF Tools" />
+        <meta 
+          property="og:description" 
+          content="Merge multiple PDF files into one document with our free online PDF merger tool. Easy to use, no registration required." 
+        />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://yourwebsite.com/pdf-tools/merge" />
         <link rel="canonical" href="https://yourwebsite.com/pdf-tools/merge" />
@@ -120,7 +165,15 @@ const PDFMerge = () => {
                 "@type": "Offer",
                 "price": "0",
                 "priceCurrency": "USD"
-              }
+              },
+              "featureList": [
+                "Merge multiple PDF files",
+                "Drag and drop interface",
+                "Browser-based processing",
+                "Free to use",
+                "No registration required"
+              ],
+              "browserRequirements": "Requires a modern web browser with JavaScript enabled"
             }
           `}
         </script>
@@ -177,6 +230,9 @@ const PDFMerge = () => {
             )}
           </div>
         </div>
+
+        <ToolManual sections={manualSections} />
+        <ToolFAQ faqs={faqs} />
       </div>
     </>
   );

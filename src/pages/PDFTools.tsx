@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet";
 import { PageHeader } from "@/components/PageHeader";
 import { ToolCard } from "@/components/ToolCard";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { 
   FilePlus, 
   FileMinus, 
@@ -77,6 +78,51 @@ const pdfTools = [
   }
 ];
 
+const faqs = [
+  {
+    question: "How do I merge PDF files?",
+    answer: "To merge PDF files, select the 'PDF Merge' tool, upload your PDF files by dragging and dropping them or clicking the upload button, arrange them in your desired order, and click 'Merge PDFs'. Your merged PDF will be ready to download."
+  },
+  {
+    question: "Is it safe to use these PDF tools?",
+    answer: "Yes, all our PDF tools process files directly in your browser. Your files are never uploaded to our servers, ensuring complete privacy and security."
+  },
+  {
+    question: "What's the maximum file size limit?",
+    answer: "Each PDF file can be up to 50MB in size. For the merge tool, you can combine up to 20 PDF files at once."
+  },
+  {
+    question: "Are these tools really free?",
+    answer: "Yes, all our PDF tools are completely free to use. There are no hidden charges or subscription fees."
+  },
+  {
+    question: "Can I use these tools on my mobile device?",
+    answer: "Yes, all our PDF tools are fully responsive and work on mobile devices, tablets, and desktop computers."
+  }
+];
+
+const userGuide = {
+  title: "How to Use PDF Tools",
+  steps: [
+    {
+      title: "Choose Your Tool",
+      description: "Select the appropriate tool from our collection based on your needs (merge, split, compress, etc.)."
+    },
+    {
+      title: "Upload Your Files",
+      description: "Click the upload button or drag and drop your PDF files into the designated area."
+    },
+    {
+      title: "Process Your Files",
+      description: "Follow the tool-specific instructions to process your files (e.g., arrange pages for merging)."
+    },
+    {
+      title: "Download Results",
+      description: "Once processing is complete, download your modified PDF files."
+    }
+  ]
+};
+
 const PDFTools = () => {
   return (
     <>
@@ -119,11 +165,41 @@ const PDFTools = () => {
           description="Free online tools to edit, convert, merge, split, compress and transform PDF files"
           category="Document Processing"
         />
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        
+        {/* Tools Grid */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-12">
           {pdfTools.map((tool) => (
             <ToolCard key={tool.title} {...tool} />
           ))}
         </div>
+
+        {/* User Guide Section */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">User Guide</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {userGuide.steps.map((step, index) => (
+              <div key={index} className="p-6 rounded-lg border bg-card">
+                <h3 className="text-lg font-semibold mb-2">
+                  {index + 1}. {step.title}
+                </h3>
+                <p className="text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger>{faq.question}</AccordionTrigger>
+                <AccordionContent>{faq.answer}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </section>
       </div>
     </>
   );

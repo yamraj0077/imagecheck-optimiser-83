@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PDFDocument, Rotation } from 'pdf-lib';
+import { PDFDocument, degrees } from 'pdf-lib';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, RotateCw, RotateCcw } from "lucide-react";
@@ -31,7 +31,7 @@ export const PDFRotateContent = () => {
     setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
   };
 
-  const rotatePDF = async (degrees: number) => {
+  const rotatePDF = async (rotationDegrees: number) => {
     if (files.length === 0) {
       toast({
         title: "No file selected",
@@ -47,25 +47,12 @@ export const PDFRotateContent = () => {
       const fileArrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(fileArrayBuffer);
       
-      // Get the appropriate Rotation enum value
-      const getRotationEnum = (degrees: number): Rotation => {
-        // Normalize degrees to 0, 90, 180, or 270
-        const normalizedDegrees = ((degrees % 360 + 360) % 360);
-        switch (normalizedDegrees) {
-          case 0: return Rotation.Degrees0;
-          case 90: return Rotation.Degrees90;
-          case 180: return Rotation.Degrees180;
-          case 270: return Rotation.Degrees270;
-          default: return Rotation.Degrees0;
-        }
-      };
-      
       // Rotate all pages
       const pages = pdfDoc.getPages();
       pages.forEach(page => {
         const currentRotation = page.getRotation().angle;
-        const newRotationDegrees = (currentRotation + degrees + 360) % 360;
-        page.setRotation(getRotationEnum(newRotationDegrees));
+        const newRotationDegrees = (currentRotation + rotationDegrees + 360) % 360;
+        page.setRotation(degrees(newRotationDegrees));
       });
 
       const pdfBytes = await pdfDoc.save();
@@ -74,7 +61,7 @@ export const PDFRotateContent = () => {
       
       const link = document.createElement('a');
       link.href = url;
-      link.download = `rotated-${degrees}-degrees.pdf`;
+      link.download = `rotated-${rotationDegrees}-degrees.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -82,7 +69,7 @@ export const PDFRotateContent = () => {
 
       toast({
         title: "Success!",
-        description: `PDF rotated ${degrees} degrees successfully`,
+        description: `PDF rotated ${rotationDegrees} degrees successfully`,
       });
     } catch (error) {
       console.error('Rotation error:', error);

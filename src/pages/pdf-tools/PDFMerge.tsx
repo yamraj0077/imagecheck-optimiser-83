@@ -39,11 +39,11 @@ const PDFMerge = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to="/">Home</BreadcrumbLink>
+              <Link to="/" className="hover:text-primary">Home</Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to="/pdf-tools">PDF Tools</BreadcrumbLink>
+              <Link to="/pdf-tools" className="hover:text-primary">PDF Tools</Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

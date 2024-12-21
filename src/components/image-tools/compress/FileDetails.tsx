@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { FileIcon } from "lucide-react";
 
 interface ImageDimensionsProps {

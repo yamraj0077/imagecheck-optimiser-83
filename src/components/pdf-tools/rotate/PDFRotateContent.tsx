@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, Rotation } from 'pdf-lib';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, RotateCw, RotateCcw } from "lucide-react";
@@ -47,10 +47,15 @@ export const PDFRotateContent = () => {
       const fileArrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(fileArrayBuffer);
       
+      // Convert degrees to Rotation enum value
+      const rotationValue = ((degrees % 360 + 360) % 360) as Rotation;
+      
       // Rotate all pages
       const pages = pdfDoc.getPages();
       pages.forEach(page => {
-        page.setRotation(degrees);
+        const currentRotation = page.getRotation().angle;
+        const newRotation = ((currentRotation + degrees) % 360 + 360) % 360;
+        page.setRotation(newRotation as Rotation);
       });
 
       const pdfBytes = await pdfDoc.save();

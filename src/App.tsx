@@ -9,6 +9,10 @@ import Index from "./pages/Index";
 import PDFTools from "./pages/PDFTools";
 import ImageTools from "./pages/ImageTools";
 import TextTools from "./pages/TextTools";
+import MediaTools from "./pages/MediaTools";
+import DevTools from "./pages/DevTools";
+import QRTools from "./pages/QRTools";
+import Utilities from "./pages/Utilities";
 import PDFMerge from "./pages/pdf-tools/PDFMerge";
 
 const queryClient = new QueryClient();
@@ -25,6 +29,10 @@ const App = () => (
               <Route path="/pdf-tools" element={<PDFTools />} />
               <Route path="/image-tools" element={<ImageTools />} />
               <Route path="/text-tools" element={<TextTools />} />
+              <Route path="/media-tools" element={<MediaTools />} />
+              <Route path="/dev-tools" element={<DevTools />} />
+              <Route path="/qr-tools" element={<QRTools />} />
+              <Route path="/utilities" element={<Utilities />} />
               <Route path="/pdf-tools/merge" element={<PDFMerge />} />
             </Routes>
           </main>

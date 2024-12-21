@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, FileIcon } from "lucide-react";
 import { ImageUploadZone } from "@/components/image-tools/ImageUploadZone";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 export const ImageCompressContent = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -35,6 +37,9 @@ export const ImageCompressContent = () => {
     }
 
     setFile(selectedFile);
+    // Create preview URL for the selected image
+    const url = URL.createObjectURL(selectedFile);
+    setPreviewUrl(url);
   };
 
   const compressImage = async () => {
@@ -112,6 +117,13 @@ export const ImageCompressContent = () => {
     }
   };
 
+  // Cleanup preview URL when component unmounts or when file changes
+  const cleanupPreview = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+  };
+
   return (
     <div className="mt-8 max-w-2xl mx-auto">
       <div className="space-y-6">
@@ -119,17 +131,35 @@ export const ImageCompressContent = () => {
         
         {file && (
           <div className="flex flex-col space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center space-x-4">
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">
-                    {file.name}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {(file.size / (1024 * 1024)).toFixed(2)} MB
-                  </p>
+            <div className="flex flex-col space-y-4 p-4 border rounded-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <FileIcon className="h-8 w-8 text-muted-foreground" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">
+                      {file.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Original size: {(file.size / (1024 * 1024)).toFixed(2)} MB
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Dimensions: {previewUrl && <ImageDimensions src={previewUrl} />}
+                    </p>
+                  </div>
                 </div>
               </div>
+
+              {previewUrl && (
+                <div className="relative w-full overflow-hidden rounded-lg border">
+                  <AspectRatio ratio={16 / 9} className="bg-muted">
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="object-contain w-full h-full"
+                    />
+                  </AspectRatio>
+                </div>
+              )}
             </div>
 
             <Button
@@ -151,4 +181,17 @@ export const ImageCompressContent = () => {
       </div>
     </div>
   );
+};
+
+// Helper component to display image dimensions
+const ImageDimensions = ({ src }: { src: string }) => {
+  const [dimensions, setDimensions] = useState<string>('Loading...');
+
+  const img = new Image();
+  img.onload = () => {
+    setDimensions(`${img.width} × ${img.height}px`);
+  };
+  img.src = src;
+
+  return <>{dimensions}</>;
 };

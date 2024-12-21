@@ -2,8 +2,9 @@ import { Helmet } from "react-helmet";
 import { PageHeader } from "@/components/PageHeader";
 import { ToolCard } from "@/components/ToolCard";
 import { 
-  FilePlus, 
-  FileOutput
+  FilePlus,
+  FileOutput,
+  Scissors
 } from "lucide-react";
 
 const pdfTools = [
@@ -14,10 +15,10 @@ const pdfTools = [
     to: "/pdf-tools/merge"
   },
   {
-    title: "PDF to Word",
-    description: "Convert PDF files to editable Word documents with high accuracy and formatting preservation.",
-    icon: <FileOutput className="h-6 w-6" />,
-    to: "/pdf-tools/to-word"
+    title: "Extract Pages",
+    description: "Extract specific pages from your PDF files. Select individual pages or page ranges to create a new PDF.",
+    icon: <Scissors className="h-6 w-6" />,
+    to: "/pdf-tools/extract"
   }
 ];
 

@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, FileIcon } from "lucide-react";
+import { Loader2, FileIcon, Download } from "lucide-react";
 import { ImageUploadZone } from "@/components/image-tools/ImageUploadZone";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 export const ImageCompressContent = () => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [compressedUrl, setCompressedUrl] = useState<string | null>(null);
+  const [compressedSize, setCompressedSize] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -36,10 +38,15 @@ export const ImageCompressContent = () => {
       return;
     }
 
+    // Cleanup previous URLs
+    cleanupUrls();
+
     setFile(selectedFile);
     // Create preview URL for the selected image
     const url = URL.createObjectURL(selectedFile);
     setPreviewUrl(url);
+    setCompressedUrl(null);
+    setCompressedSize(null);
   };
 
   const compressImage = async () => {
@@ -92,15 +99,10 @@ export const ImageCompressContent = () => {
         );
       });
 
-      // Create download link
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `compressed-${file.name}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      // Set compressed size and URL
+      setCompressedSize(blob.size);
+      const compressedImageUrl = URL.createObjectURL(blob);
+      setCompressedUrl(compressedImageUrl);
 
       toast({
         title: "Success!",
@@ -117,12 +119,33 @@ export const ImageCompressContent = () => {
     }
   };
 
-  // Cleanup preview URL when component unmounts or when file changes
-  const cleanupPreview = () => {
+  const handleDownload = () => {
+    if (!compressedUrl || !file) return;
+
+    const link = document.createElement('a');
+    link.href = compressedUrl;
+    link.download = `compressed-${file.name}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Cleanup URLs when component unmounts or when file changes
+  const cleanupUrls = () => {
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
+    if (compressedUrl) {
+      URL.revokeObjectURL(compressedUrl);
+    }
   };
+
+  // Cleanup on component unmount
+  React.useEffect(() => {
+    return () => {
+      cleanupUrls();
+    };
+  }, []);
 
   return (
     <div className="mt-8 max-w-2xl mx-auto">
@@ -142,6 +165,13 @@ export const ImageCompressContent = () => {
                     <p className="text-sm text-muted-foreground">
                       Original size: {(file.size / (1024 * 1024)).toFixed(2)} MB
                     </p>
+                    {compressedSize && (
+                      <p className="text-sm text-muted-foreground">
+                        Compressed size: {(compressedSize / (1024 * 1024)).toFixed(2)} MB
+                        {' '}
+                        ({Math.round((1 - compressedSize / file.size) * 100)}% reduction)
+                      </p>
+                    )}
                     <p className="text-sm text-muted-foreground">
                       Dimensions: {previewUrl && <ImageDimensions src={previewUrl} />}
                     </p>
@@ -153,7 +183,7 @@ export const ImageCompressContent = () => {
                 <div className="relative w-full overflow-hidden rounded-lg border">
                   <AspectRatio ratio={16 / 9} className="bg-muted">
                     <img
-                      src={previewUrl}
+                      src={compressedUrl || previewUrl}
                       alt="Preview"
                       className="object-contain w-full h-full"
                     />
@@ -162,20 +192,33 @@ export const ImageCompressContent = () => {
               )}
             </div>
 
-            <Button
-              className="w-full"
-              onClick={compressImage}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Compressing Image...
-                </>
-              ) : (
-                "Compress Image"
+            <div className="flex gap-4">
+              <Button
+                className="flex-1"
+                onClick={compressImage}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Compressing Image...
+                  </>
+                ) : (
+                  "Compress Image"
+                )}
+              </Button>
+
+              {compressedUrl && (
+                <Button
+                  className="flex-1"
+                  onClick={handleDownload}
+                  variant="secondary"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download Compressed Image
+                </Button>
               )}
-            </Button>
+            </div>
           </div>
         )}
       </div>

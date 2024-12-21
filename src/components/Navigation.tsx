@@ -1,54 +1,94 @@
-import { Link, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import * as React from "react";
+import { Link } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
-  FileText,
-  Image as ImageIcon,
-  Type,
-  Video,
-  Code,
-  QrCode,
-  Settings,
-  Wrench,
-} from "lucide-react";
-
-const navigation = [
-  { name: "PDF Tools", href: "/pdf-tools", icon: FileText },
-  { name: "Image Tools", href: "/image-tools", icon: ImageIcon },
-  { name: "Text Tools", href: "/text-tools", icon: Type },
-  { name: "Media Tools", href: "/media-tools", icon: Video },
-  { name: "Dev Tools", href: "/dev-tools", icon: Code },
-  { name: "QR Tools", href: "/qr-tools", icon: QrCode },
-  { name: "Utilities", href: "/utilities", icon: Wrench },
-];
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 export const Navigation = () => {
-  const location = useLocation();
+  const isMobile = useIsMobile();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const menuItems = [
+    { title: "PDF Tools", href: "/pdf-tools" },
+    { title: "Image Tools", href: "/image-tools" },
+    { title: "Text Tools", href: "/text-tools" },
+    { title: "Media Tools", href: "/media-tools" },
+    { title: "Developer Tools", href: "/dev-tools" },
+    { title: "QR Tools", href: "/qr-tools" },
+    { title: "Utilities", href: "/utilities" },
+  ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
-        <Link to="/" className="flex items-center space-x-2">
-          <Settings className="h-6 w-6 text-primary" />
-          <span className="text-lg font-bold">Free Online Tools</span>
-        </Link>
-        <div className="ml-auto flex space-x-4">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.href}
-              className={cn(
-                "flex items-center space-x-1 text-sm font-medium transition-colors hover:text-primary",
-                location.pathname === item.href
-                  ? "text-primary"
-                  : "text-muted-foreground"
-              )}
-            >
-              <item.icon className="h-4 w-4" />
-              <span>{item.name}</span>
-            </Link>
-          ))}
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center">
+        <div className="mr-4 flex">
+          <Link to="/" className="mr-6 flex items-center space-x-2">
+            <span className="hidden font-bold sm:inline-block">
+              Free Online Tools
+            </span>
+          </Link>
         </div>
+
+        {isMobile ? (
+          <>
+            <Button
+              variant="ghost"
+              className="ml-auto h-8 w-8 px-0"
+              onClick={toggleMenu}
+            >
+              {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </Button>
+            
+            {isMenuOpen && (
+              <div className="absolute left-0 top-14 w-full bg-background border-b">
+                <nav className="container py-4">
+                  <ul className="space-y-4">
+                    {menuItems.map((item) => (
+                      <li key={item.href}>
+                        <Link
+                          to={item.href}
+                          className="block px-4 py-2 text-sm hover:bg-accent rounded-md"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            )}
+          </>
+        ) : (
+          <NavigationMenu className="ml-auto">
+            <NavigationMenuList>
+              {menuItems.map((item) => (
+                <NavigationMenuItem key={item.href}>
+                  <Link to={item.href}>
+                    <NavigationMenuLink
+                      className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
+                    >
+                      {item.title}
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        )}
       </div>
-    </nav>
+    </header>
   );
 };

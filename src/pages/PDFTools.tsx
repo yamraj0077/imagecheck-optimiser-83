@@ -3,15 +3,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { ToolCard } from "@/components/ToolCard";
 import { 
   FilePlus, 
-  FileMinus, 
-  FileSearch, 
-  FileText, 
-  FileCheck, 
-  FileX, 
-  FileEdit, 
-  FileOutput, 
-  FileInput, 
-  FileCode 
+  FileOutput
 } from "lucide-react";
 
 const pdfTools = [
@@ -22,58 +14,10 @@ const pdfTools = [
     to: "/pdf-tools/merge"
   },
   {
-    title: "PDF Split",
-    description: "Split large PDF files into smaller documents. Ideal for extracting specific pages or creating smaller file sizes.",
-    icon: <FileMinus className="h-6 w-6" />,
-    to: "/pdf-tools/split"
-  },
-  {
-    title: "PDF OCR",
-    description: "Convert scanned PDFs into searchable and editable text documents using advanced OCR technology.",
-    icon: <FileSearch className="h-6 w-6" />,
-    to: "/pdf-tools/ocr"
-  },
-  {
-    title: "PDF Compress",
-    description: "Reduce PDF file size while maintaining quality. Perfect for email attachments and web uploads.",
-    icon: <FileCode className="h-6 w-6" />,
-    to: "/pdf-tools/compress"
-  },
-  {
     title: "PDF to Word",
     description: "Convert PDF files to editable Word documents with high accuracy and formatting preservation.",
     icon: <FileOutput className="h-6 w-6" />,
     to: "/pdf-tools/to-word"
-  },
-  {
-    title: "Word to PDF",
-    description: "Convert Word documents to PDF format while maintaining original formatting and layout.",
-    icon: <FileInput className="h-6 w-6" />,
-    to: "/pdf-tools/from-word"
-  },
-  {
-    title: "PDF Editor",
-    description: "Edit text, images, and other elements in PDF files directly online without software installation.",
-    icon: <FileEdit className="h-6 w-6" />,
-    to: "/pdf-tools/editor"
-  },
-  {
-    title: "PDF Sign",
-    description: "Add digital signatures to PDF documents securely. Perfect for business and legal documents.",
-    icon: <FileCheck className="h-6 w-6" />,
-    to: "/pdf-tools/sign"
-  },
-  {
-    title: "PDF Delete Pages",
-    description: "Remove unwanted pages from PDF files quickly and easily without affecting document quality.",
-    icon: <FileX className="h-6 w-6" />,
-    to: "/pdf-tools/delete-pages"
-  },
-  {
-    title: "PDF Protect",
-    description: "Add password protection and encryption to PDF files for enhanced document security.",
-    icon: <FileText className="h-6 w-6" />,
-    to: "/pdf-tools/protect"
   }
 ];
 

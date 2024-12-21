@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FileText,
   Image as ImageIcon,
@@ -30,15 +30,20 @@ export const Navigation = () => {
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+    document.body.style.overflow = 'unset';
+  }, [location]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    // Prevent scrolling when menu is open
     document.body.style.overflow = !isMenuOpen ? 'hidden' : 'unset';
   };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center space-x-2">
           <Settings className="h-6 w-6 text-primary" />
           <span className="text-lg font-bold">Free Online Tools</span>
@@ -48,7 +53,7 @@ export const Navigation = () => {
           <>
             <button
               onClick={toggleMenu}
-              className="p-2 text-muted-foreground hover:text-primary"
+              className="p-2 text-muted-foreground hover:text-primary focus:outline-none"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMenuOpen ? (
@@ -60,25 +65,27 @@ export const Navigation = () => {
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-              <div className="fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="container py-4">
-                  <div className="flex flex-col space-y-4">
-                    {navigation.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.href}
-                        onClick={toggleMenu}
-                        className={cn(
-                          "flex items-center space-x-2 rounded-lg p-2 text-sm font-medium transition-colors hover:bg-accent",
-                          location.pathname === item.href
-                            ? "bg-accent text-accent-foreground"
-                            : "text-muted-foreground"
-                        )}
-                      >
-                        <item.icon className="h-5 w-5" />
-                        <span>{item.name}</span>
-                      </Link>
-                    ))}
+              <div className="fixed inset-0 top-16 z-50">
+                <div className="absolute inset-0 bg-background/95 backdrop-blur-md">
+                  <div className="container py-6 px-4">
+                    <div className="flex flex-col space-y-3">
+                      {navigation.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          onClick={toggleMenu}
+                          className={cn(
+                            "flex items-center space-x-3 rounded-lg p-3 text-base font-medium transition-colors hover:bg-accent",
+                            location.pathname.startsWith(item.href)
+                              ? "bg-accent text-accent-foreground"
+                              : "text-muted-foreground"
+                          )}
+                        >
+                          <item.icon className="h-5 w-5" />
+                          <span>{item.name}</span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -92,7 +99,7 @@ export const Navigation = () => {
                 to={item.href}
                 className={cn(
                   "flex items-center space-x-1 text-sm font-medium transition-colors hover:text-primary",
-                  location.pathname === item.href
+                  location.pathname.startsWith(item.href)
                     ? "text-primary"
                     : "text-muted-foreground"
                 )}
